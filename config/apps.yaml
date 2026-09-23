@@ -1,0 +1,50 @@
+apps:
+  cricsignal:
+    genre: cricket
+    one_liner: "Cricbuzz-speed scores plus the deep analysis and an AI chatbot Cricbuzz doesn't have."
+    category_reference: Cricbuzz
+    differentiators:
+      - "Ball-by-ball PLUS predictive/advanced analytics layered on top"
+      - "AI chat that answers 'should I captain Gill tonight?' in natural language"
+      - "Pitch report, matchup history, player form as a conversation not a table"
+    proof_devices: [side-by-side with a generic score app, pre-toss prediction that lands, matchup stat that ends an argument]
+    ad_jobs: [install, first-query-in-chat]
+    guardrails:
+      - "Never guarantee fantasy winnings or present as betting/gambling — Meta rejects and it's untrue"
+      - "Do not use official IPL/BCCI/broadcaster footage, logos, team jerseys or player likeness"
+      - "Avoid odds language ('lock', 'sure shot', 'jackpot')"
+
+  prabhuji:
+    genre: bhakti
+    one_liner: "An AI-powered Sanatan companion — darshan, aarti, katha, panchang and a guru you can actually ask."
+    play_url: https://play.google.com/store/apps/details?id=com.prabhuji.ai
+    differentiators:
+      - "Ask a question in your own language and get a scripture-grounded answer"
+      - "Daily panchang / muhurat / vrat rules without hunting a pandit"
+      - "Personal daily practice streak, not just a video feed"
+    proof_devices: [asking a real doubt out loud, festival prep countdown, elder using it easily]
+    ad_jobs: [install, first-aarti-completed]
+    guardrails:
+      - "Reverent register. No deity parody, no comedic deity voices, no deity lip-sync"
+      - "Never depict AI as replacing a deity or a guru's authority — it assists practice"
+      - "No claims of miracles, cures, or fortune outcomes"
+      - "Respect sampradaya differences; keep regional deity forms accurate to that state"
+
+  dostii:
+    aliases: [dostipro, dosti, yaari]
+    genre: companionship
+    one_liner: "Talk to a real woman, any hour, about nothing in particular — because the day was long and the room is quiet."
+    positioning: "NOT a dating app. A conversation utility for men who are bored, isolated or unheard."
+    audience: "Men 25-55 across occupational archetypes; listeners are women 25+"
+    differentiators:
+      - "Available at 2am when nobody else is"
+      - "No history, no judgement, no obligation to be interesting"
+      - "Voice-first — for men who type slowly but talk fine"
+    emotional_jobs: [boredom, venting, being heard, low-stakes practice, routine company]
+    ad_jobs: [install, first-call-connected]
+    guardrails:
+      - "Never imply romance, dating, matchmaking, marriage or physical meeting"
+      - "No sexual or suggestive framing — Meta will reject and it misrepresents the product"
+      - "Do not depict listeners as available for anything beyond conversation"
+      - "Do not fabricate testimonials or real-person claims"
+      - "Depict adults only, clearly 25+"

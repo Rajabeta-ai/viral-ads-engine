@@ -1,0 +1,76 @@
+# Language -> states/regions map used for geo attribution of trends.
+languages:
+  hi:  { name: Hindi,      states: [Uttar Pradesh, Madhya Pradesh, Rajasthan, Delhi, Haryana, Uttarakhand, Chhattisgarh, Himachal Pradesh] }
+  bho: { name: Bhojpuri,   states: [Bihar, Eastern Uttar Pradesh, Jharkhand] }
+  bn:  { name: Bengali,    states: [West Bengal, Tripura, Assam (Barak Valley)] }
+  mr:  { name: Marathi,    states: [Maharashtra, Goa] }
+  gu:  { name: Gujarati,   states: [Gujarat, Daman & Diu] }
+  pa:  { name: Punjabi,    states: [Punjab, Chandigarh, Haryana] }
+  ta:  { name: Tamil,      states: [Tamil Nadu, Puducherry] }
+  te:  { name: Telugu,     states: [Telangana, Andhra Pradesh] }
+  kn:  { name: Kannada,    states: [Karnataka] }
+  ml:  { name: Malayalam,  states: [Kerala, Lakshadweep] }
+  or:  { name: Odia,       states: [Odisha] }
+
+# Hashtag seeds per genre per language. These are the HikerAPI harvest surface.
+seeds:
+  cricket:
+    _global: [cricket, cricketlovers, cricketfever, iplfans, indiancricketteam, cricketmemes, cricketreels, cricketedits, fantasycricket, dream11, cricketanalysis, cricketstats]
+    hi:  [crickethindi, cricketgyan, viratkohlifans, rohitsharmafans, cricketkabaap, ipl2026]
+    bho: [bhojpuricricket, cricketbihar]
+    bn:  [bengalcricket, kkrfans, cricketbengali]
+    mr:  [mumbaiindians, marathicricket, cricketmarathi]
+    gu:  [gujarattitans, gujaraticricket]
+    pa:  [punjabkings, punjabicricket]
+    ta:  [csk, csktrolls, tamilcricket, thaladhoni]
+    te:  [sunrisershyderabad, telugucricket, cricketintelugu]
+    kn:  [rcb, rcbfans, kannadacricket, namma_rcb]
+    ml:  [malayalamcricket, keralacricket, cricketmalayalam]
+    or:  [odishacricket, odiacricket]
+  bhakti:
+    _global: [bhakti, bhaktisong, bhajan, mahadev, krishna, hanumanji, sanatandharma, shivbhakti, ram, devotional, mandir, aarti, godsgrace, spiritualindia, bhaktireels]
+    hi:  [bhaktisongs, hanumanchalisa, radhakrishna, shrikrishna, mahakal, khatushyamji, bhaktimarg, jaishreeram]
+    bho: [bhojpuribhakti, chhathpuja, bhojpuribhajan]
+    bn:  [durgapuja, kalimaa, bengalibhakti, joymaakali]
+    mr:  [vitthal, ganpatibappamorya, marathibhakti, pandharpur, ashadhiwari]
+    gu:  [ambemaa, gujaratibhakti, dwarkadhish, navratrigarba]
+    pa:  [waheguru, gurbani, goldentemple, shabadkirtan]
+    ta:  [murugan, tamilbhakti, ayyappa, tamildevotional, thiruppugazh]
+    te:  [tirumala, venkateswara, telugubhakti, lordvenkateswara]
+    kn:  [kannadabhakti, sriramanavami, udupikrishna, dharmasthala]
+    ml:  [sabarimala, ayyappaswamy, guruvayur, malayalambhakti]
+    or:  [jagannath, jaijagannath, puri, odiabhakti]
+  companionship:
+    _global: [lonelinessquotes, latenightthoughts, relatable, emotionalstatus, breakupstatus, feelings, aloneboy, sadshayari, deeptalks, overthinking, mentalhealthindia, friendshipgoals]
+    hi:  [shayari, hindishayari, dilkibaat, akelapan, sadshayarihindi, dardbharishayari, emotionalshayari]
+    bho: [bhojpurisad, bhojpurishayari]
+    bn:  [banglashayari, banglasad, mondkharap]
+    mr:  [marathiquotes, marathistatus, marathiprem]
+    gu:  [gujaratishayari, gujaratistatus]
+    pa:  [punjabisad, punjabishayari, punjabistatus]
+    ta:  [tamilkavithai, tamilsadsong, tamilfeelings]
+    te:  [telugusad, telugufeelings, teluguquotes]
+    kn:  [kannadasad, kannadaquotes, kannadafeelings]
+    ml:  [malayalamquotes, malayalamsad, malayalamfeelings]
+    or:  [odiasad, odiashayari]
+
+# Occupational / life-situation archetypes for the companionship apps.
+archetypes:
+  companionship:
+    - { id: night_shift_driver,   label: "Night-shift driver (truck/cab/auto)", core_need: "company during 10pm-4am dead hours", states: [Uttar Pradesh, Bihar, Punjab, Maharashtra, Rajasthan] }
+    - { id: migrant_tier1,        label: "Tier-1 migrant, family in tier-2/3", core_need: "someone to talk to after work in an empty room", states: [Maharashtra, Karnataka, Delhi, Telangana, Gujarat] }
+    - { id: it_professional,      label: "IT / BPO professional, WFH isolation", core_need: "unstructured non-work conversation", states: [Karnataka, Telangana, Maharashtra, Tamil Nadu] }
+    - { id: shopkeeper_idle,      label: "Shopkeeper / counter job, long idle hours", core_need: "filling 6 empty hours behind a counter", states: [Gujarat, Rajasthan, Uttar Pradesh, West Bengal] }
+    - { id: post_breakup,         label: "Recent breakup, venting nightly", core_need: "non-judgmental listener, no history", states: [Delhi, Punjab, Maharashtra, West Bengal] }
+    - { id: social_learner,       label: "Never learned to talk to women", core_need: "low-stakes practice, confidence as a side effect", states: [Bihar, Uttar Pradesh, Madhya Pradesh, Haryana] }
+    - { id: bank_govt_desk,       label: "Bank / govt desk job, posting away from home", core_need: "routine evening companionship", states: [Uttar Pradesh, Bihar, Odisha, Madhya Pradesh] }
+  cricket:
+    - { id: fantasy_player,       label: "Fantasy league player (Dream11/MPL)", core_need: "pre-toss edge, pitch + form data" }
+    - { id: stat_nerd,            label: "Stat-arguing superfan", core_need: "ammunition to win group-chat arguments" }
+    - { id: casual_score_checker, label: "Score-checker, low engagement", core_need: "fastest score, zero friction" }
+    - { id: regional_franchise,   label: "Franchise loyalist (CSK/RCB/MI/KKR)", core_need: "tribal identity content" }
+  bhakti:
+    - { id: daily_ritual,         label: "Daily aarti / paath householder", core_need: "structured daily practice on phone" }
+    - { id: festival_spiker,      label: "Festival-driven observer", core_need: "vrat rules, muhurat, katha on demand" }
+    - { id: diaspora_devotee,     label: "Away from home temple", core_need: "darshan + ritual continuity remotely" }
+    - { id: anxious_seeker,       label: "Seeking answers in crisis", core_need: "ask a question, get scriptural answer" }

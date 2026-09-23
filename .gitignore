@@ -1,0 +1,13 @@
+.env
+.env.*
+data/raw/.cache/
+data/renders/
+data/scored/
+data/trends/
+data/prompts/
+data/assets/
+data/.schedule.json
+logs/
+__pycache__/
+*.pyc
+.claude/

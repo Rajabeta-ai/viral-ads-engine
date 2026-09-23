@@ -1,0 +1,40 @@
+# Render blueprint.
+#
+# ONE service, not two. Render Cron Jobs run in their own container and CANNOT mount the
+# same persistent disk as a web service - so a separate cron job would harvest into a disk
+# the UI cannot read. The scheduler therefore runs as a thread inside the web service,
+# which is the only process that can see the disk.
+services:
+  - type: web
+    name: viral-ads-engine
+    runtime: docker
+    plan: starter            # a persistent disk requires starter or above
+    healthCheckPath: /api/health
+    autoDeploy: false
+    disk:
+      name: viral-ads-data
+      mountPath: /var/data   # matches DATA_DIR
+      sizeGB: 10
+    envVars:
+      - key: DATA_DIR
+        value: /var/data
+      - key: WINDOW_DAYS
+        value: "3"
+      - key: SCHEDULE_HOURS
+        value: "3"           # internal scheduler interval
+      - key: PROMPTS_HOUR
+        value: "4"
+      - key: HIKER_API_KEY
+        sync: false          # set in the Render dashboard, never in this file
+      - key: AZURE_ENDPOINT
+        sync: false
+      - key: AZURE_API_KEY
+        sync: false
+      - key: AZURE_MODEL
+        value: gpt-6-astra
+      - key: GOOGLE_API_KEY
+        sync: false
+      - key: VEO_MODEL
+        value: veo-3.1-fast-generate-preview
+      - key: ELEVENLABS_API_KEY
+        sync: false

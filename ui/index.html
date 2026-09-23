@@ -1,0 +1,267 @@
+<!doctype html><html lang="en"><head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Viral Ads Engine</title>
+<style>
+:root{--bg:#0b0d10;--panel:#14171c;--panel2:#1a1e25;--line:#252b34;--tx:#e8ecf1;--dim:#8b96a5;
+--acc:#6ee7a8;--acc2:#7dd3fc;--warn:#fbbf24;--bad:#f87171;--r:10px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--tx);font:14px/1.5 ui-sans-serif,-apple-system,"Segoe UI",Roboto,sans-serif}
+header{position:sticky;top:0;z-index:20;background:rgba(11,13,16,.94);backdrop-filter:blur(8px);
+border-bottom:1px solid var(--line);padding:12px 18px;display:flex;gap:14px;align-items:center;flex-wrap:wrap}
+h1{font-size:15px;margin:0;letter-spacing:.3px}
+h1 span{color:var(--acc)}
+.sp{flex:1}
+button{background:var(--panel2);color:var(--tx);border:1px solid var(--line);border-radius:8px;
+padding:6px 11px;font-size:12px;cursor:pointer;font-weight:500}
+button:hover{border-color:var(--acc);color:var(--acc)}
+button.go{background:var(--acc);color:#04120a;border-color:var(--acc);font-weight:600}
+main{padding:18px;max-width:1500px;margin:0 auto}
+.grid{display:grid;gap:14px}
+.stats{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:16px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--r);padding:14px}
+.kpi{font-size:26px;font-weight:650;letter-spacing:-.5px}
+.kpi.g{color:var(--acc)} .kpi.b{color:var(--acc2)}
+.lbl{color:var(--dim);font-size:11px;text-transform:uppercase;letter-spacing:.7px;margin-top:2px}
+nav{display:flex;gap:6px;border-bottom:1px solid var(--line);margin:18px 0 14px;flex-wrap:wrap}
+nav b{padding:8px 13px;cursor:pointer;color:var(--dim);font-weight:500;font-size:13px;
+border-bottom:2px solid transparent;margin-bottom:-1px}
+nav b.on{color:var(--acc);border-bottom-color:var(--acc)}
+section{display:none} section.on{display:block}
+table{width:100%;border-collapse:collapse;font-size:12.5px}
+th{text-align:left;color:var(--dim);font-weight:500;font-size:11px;text-transform:uppercase;
+letter-spacing:.5px;padding:8px 9px;border-bottom:1px solid var(--line);position:sticky;top:57px;background:var(--bg)}
+td{padding:8px 9px;border-bottom:1px solid #1b1f26;vertical-align:top}
+tr:hover td{background:#12151a}
+a{color:var(--acc2);text-decoration:none} a:hover{text-decoration:underline}
+.pill{display:inline-block;padding:1px 7px;border-radius:99px;font-size:10.5px;border:1px solid var(--line);
+background:var(--panel2);color:var(--dim);margin:1px 3px 1px 0;white-space:nowrap}
+.pill.g{color:var(--acc);border-color:#1e4534} .pill.b{color:var(--acc2);border-color:#1c3b4d}
+.pill.w{color:var(--warn);border-color:#4a3a13} .pill.r{color:var(--bad);border-color:#4d2222}
+.num{font-variant-numeric:tabular-nums;text-align:right;white-space:nowrap}
+.mono{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px}
+.day{border-left:2px solid var(--acc);padding-left:12px;margin-bottom:18px}
+.day>h3{margin:0 0 8px;font-size:13px;color:var(--acc)}
+.fmt{background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:11px;margin-bottom:9px}
+.fmt h4{margin:0 0 5px;font-size:13.5px}
+.fmt p{margin:3px 0;color:var(--dim);font-size:12.5px}
+.fmt .hk{color:var(--tx)}
+pre{background:#0a0c0f;border:1px solid var(--line);border-radius:8px;padding:11px;overflow:auto;
+font-size:11.5px;max-height:320px;white-space:pre-wrap;word-break:break-word;color:#c8d2de}
+.log{max-height:240px;overflow:auto;background:#07090b;border:1px solid var(--line);border-radius:8px;
+padding:9px;font-family:ui-monospace,monospace;font-size:11px;color:#9fb0c2}
+.vid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.vid video{width:100%;border-radius:8px;background:#000;aspect-ratio:9/16;object-fit:cover}
+.bar{height:5px;background:var(--panel2);border-radius:3px;overflow:hidden;margin-top:5px}
+.bar i{display:block;height:100%;background:var(--acc)}
+.muted{color:var(--dim)} .empty{color:var(--dim);padding:26px;text-align:center}
+details summary{cursor:pointer;color:var(--acc2);font-size:12px;padding:3px 0}
+</style></head><body>
+<header>
+  <h1>Viral Ads Engine <span id="dot">●</span></h1>
+  <span class="muted mono" id="stamp"></span>
+  <span class="sp"></span>
+  <label class="muted" style="font-size:11.5px">show last
+    <select id="win" onchange="setWin(this.value)" style="background:var(--panel2);color:var(--tx);
+      border:1px solid var(--line);border-radius:6px;padding:4px 6px;font-size:11.5px;margin-left:4px">
+      <option value="1">1 day</option><option value="3" selected>3 days</option>
+      <option value="7">7 days</option><option value="14">14 days</option>
+      <option value="45">45 days</option>
+    </select></label>
+  <button onclick="run('harvest')">Harvest</button>
+  <button onclick="run('enrich')">Enrich</button>
+  <button onclick="run('trends')">Classify</button>
+  <button onclick="run('cluster')">Cluster</button>
+  <button onclick="run('prompts')">Prompts</button>
+  <button class="go" onclick="run('render')">Render</button>
+  <button onclick="document.getElementById('up').click()">Upload outro</button>
+  <input id="up" type="file" accept="video/*" style="display:none" onchange="upOutro(this)">
+</header>
+<main>
+  <div class="grid stats" id="stats"></div>
+  <nav>
+    <b class="on" data-t="timeline">Trend timeline</b><b data-t="lang">By language</b>
+    <b data-t="genre">By genre</b><b data-t="formats">Canonical formats</b>
+    <b data-t="reels">Top reels</b><b data-t="prompts">Prompts</b>
+    <b data-t="comp">Competitors</b><b data-t="renders">Renders</b><b data-t="jobs">Jobs</b>
+  </nav>
+  <section class="on" id="s-timeline"></section>
+  <section id="s-lang"></section>
+  <section id="s-genre"></section>
+  <section id="s-formats"></section>
+  <section id="s-reels"></section>
+  <section id="s-prompts"></section>
+  <section id="s-comp"></section>
+  <section id="s-renders"></section>
+  <section id="s-jobs"></section>
+</main>
+<script>
+const $=s=>document.querySelector(s), esc=s=>(s??'').toString().replace(/[<>&]/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;'}[c]));
+const N=n=>(n??0).toLocaleString('en-IN');
+let S={}, WIN=+(localStorage.getItem('win')||3);
+document.querySelectorAll('nav b').forEach(b=>b.onclick=()=>{
+  document.querySelectorAll('nav b').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+  document.querySelectorAll('section').forEach(x=>x.classList.remove('on'));
+  $('#s-'+b.dataset.t).classList.add('on');});
+
+async function run(stage){ await fetch('/api/run/'+stage,{method:'POST'}); setTimeout(load,400);
+  document.querySelectorAll('nav b').forEach(x=>x.classList.remove('on'));
+  document.querySelector('nav b[data-t=jobs]').classList.add('on');
+  document.querySelectorAll('section').forEach(x=>x.classList.remove('on'));$('#s-jobs').classList.add('on');}
+async function upOutro(el){ const f=el.files[0]; if(!f)return;
+  const fd=new FormData(); fd.append('file',f);
+  await fetch('/api/outro',{method:'POST',body:fd}); load();}
+
+function stats(){
+  const h=S.harvest||{}, t=S.trends||{};
+  const running=(S.jobs||[]).filter(j=>j.status==='running').length;
+  $('#stats').innerHTML=[
+    ['reels in window',N(h.count),'g'],['creators enriched',N(h.enriched),'b'],
+    ['days covered',N(Object.keys(S.dates||{}).length),''],
+    ['formats classified',N(t.classified),'b'],
+    ['canonical formats',N((t.canonical_formats||[]).length),'g'],
+    ['prompts ready',N(((S.prompts||{}).prompts||[]).length),'g'],
+    ['renders',N((S.renders||[]).length),''],
+    ['jobs running',N(running),running?'w':''],
+  ].map(([l,v,c])=>`<div class="card"><div class="kpi ${c}">${v}</div><div class="lbl">${l}</div></div>`).join('');
+  $('#stamp').textContent=`last ${S.window_days}d (since ${S.cutoff||'—'}) · ${N(h.count)} of ${N(h.total_on_disk)} on disk · outro ${(S.outro||{}).present?'✓':'—'}`
+    + (S.schedule&&S.schedule.last_run?` · cron ${String(S.schedule.last_run).slice(0,16).replace('T',' ')}`:'');
+  $('#dot').style.color=running?'var(--warn)':'var(--acc)';
+}
+function timeline(){
+  const tl=(S.trends||{}).timeline||[];
+  if(!tl.length)return $('#s-timeline').innerHTML='<div class="empty">No trends yet — run Harvest → Enrich → Classify.</div>';
+  $('#s-timeline').innerHTML=tl.map(d=>`<div class="day"><h3>${d.date}</h3>`+
+    `<table><thead><tr><th>Genre</th><th>Language</th><th>States</th><th>Top format</th>
+     <th>Hook mechanic</th><th>Job</th><th class="num">Peak reach</th><th class="num">Outlier</th><th>AI</th><th></th></tr></thead><tbody>`+
+    d.entries.map(e=>`<tr>
+      <td><span class="pill ${e.genre==='bhakti'?'w':e.genre==='cricket'?'b':'g'}">${esc(e.genre)}</span></td>
+      <td>${esc(e.language)}</td>
+      <td class="muted">${esc((e.states||[]).slice(0,3).join(', '))}</td>
+      <td>${esc(e.top_format)}</td>
+      <td class="muted">${esc(e.hook_mechanic)}</td>
+      <td><span class="pill">${esc(e.emotional_job)}</span></td>
+      <td class="num">${N(e.peak_reach)}</td>
+      <td class="num ${e.peak_outlier>50?'':''}"><b style="color:${e.peak_outlier>50?'var(--acc)':'var(--dim)'}">${e.peak_outlier}×</b></td>
+      <td>${e.ai_recreatable?'<span class="pill g">yes</span>':'<span class="pill r">no</span>'}</td>
+      <td><a href="${e.exemplar}" target="_blank">reel ↗</a></td></tr>`).join('')+
+    `</tbody></table></div>`).join('');
+}
+function formats(){
+  const cf=(S.trends||{}).canonical_formats||[];
+  if(!cf.length)return $('#s-formats').innerHTML='<div class="empty">Run Cluster to collapse formats into canonical recipes.</div>';
+  const max=Math.max(...cf.map(c=>c.measured.total_reach));
+  $('#s-formats').innerHTML=cf.map(c=>{const m=c.measured;return `<div class="fmt">
+    <h4>${esc(c.canonical)} <span class="pill ${c.ai_feasibility==='high'?'g':c.ai_feasibility==='medium'?'w':'r'}">AI ${esc(c.ai_feasibility)}</span>
+    ${(c.best_for||[]).map(b=>`<span class="pill b">${esc(b)}</span>`).join('')}</h4>
+    <p><b class="hk">Recipe:</b> ${esc(c.recipe)}</p>
+    <p><b class="hk">Hook:</b> ${esc(c.hook_mechanic)}</p>
+    <p>${N(m.total_reach)} reach · ${m.uses} reels · median outlier <b style="color:var(--acc)">${m.median_outlier}×</b>
+       · ${esc(m.langs.join(', '))} ${m.top_exemplar?`· <a href="${m.top_exemplar}" target="_blank">exemplar ↗</a>`:''}</p>
+    <div class="bar"><i style="width:${100*m.total_reach/max}%"></i></div></div>`}).join('');
+}
+function groupCard(g,isLang){
+  const sub = isLang
+    ? `<span class="muted">${esc((g.states||[]).slice(0,3).join(', '))}</span>`
+    : `<span class="muted">${Object.entries(g.langs||{}).slice(0,6).map(([k,v])=>k+':'+v).join(' · ')}</span>`;
+  const chips = Object.entries(isLang?(g.genres||{}):(g.jobs||{}))
+    .map(([k,v])=>`<span class="pill ${k==='bhakti'?'w':k==='cricket'?'b':'g'}">${esc(k)} ${v}</span>`).join('');
+  const fmts = (g.top_formats||[]).length
+    ? `<table style="margin-top:8px"><thead><tr><th>Format</th><th>Job</th><th class="num">Reels</th>
+       <th class="num">Reach</th><th class="num">Peak outlier</th><th>AI</th><th></th></tr></thead><tbody>`+
+      g.top_formats.map(f=>`<tr><td>${esc(f.format)}</td>
+        <td><span class="pill">${esc(f.job||'—')}</span></td>
+        <td class="num">${f.n}</td><td class="num">${N(f.reach)}</td>
+        <td class="num"><b style="color:${f.outlier>50?'var(--acc)':'var(--dim)'}">${N(Math.round(f.outlier))}×</b></td>
+        <td>${f.ai?'<span class="pill g">yes</span>':'<span class="pill r">no</span>'}</td>
+        <td><a href="${f.url}" target="_blank">↗</a></td></tr>`).join('')+`</tbody></table>`
+    : `<p class="muted" style="margin-top:6px">No classified formats in this window — run Classify.</p>`;
+  return `<div class="fmt"><h4>${esc(g.label)}
+      <span class="pill b">${N(g.n)} reels</span>
+      <span class="pill">${N(g.classified)} classified</span>
+      <span class="pill g">peak ${N(Math.round(g.peak_outlier))}×</span></h4>
+    <p>${sub}</p><p>${chips}</p>
+    <p class="muted">${N(g.total_reach)} total reach</p>${fmts}</div>`;
+}
+function byLang(){
+  const g=S.by_language||[];
+  if(!g.length)return $('#s-lang').innerHTML='<div class="empty">Nothing in this window. Widen it or run Harvest.</div>';
+  $('#s-lang').innerHTML=g.map(x=>groupCard(x,true)).join('');
+}
+function byGenre(){
+  const g=S.by_genre||[];
+  if(!g.length)return $('#s-genre').innerHTML='<div class="empty">Nothing in this window.</div>';
+  $('#s-genre').innerHTML=g.map(x=>groupCard(x,false)).join('');
+}
+function reels(){
+  const r=S.top_reels||[];
+  if(!r.length)return $('#s-reels').innerHTML='<div class="empty">No reels yet.</div>';
+  $('#s-reels').innerHTML=`<table><thead><tr><th>Date</th><th>Genre</th><th>Lang</th><th>Creator</th>
+   <th class="num">Followers</th><th class="num">Reach</th><th class="num">Outlier</th><th>Format</th><th>Caption</th><th></th></tr></thead><tbody>`+
+   r.map(x=>`<tr><td class="mono">${esc(x.date)}</td>
+   <td><span class="pill ${x.genre==='bhakti'?'w':x.genre==='cricket'?'b':'g'}">${esc(x.genre)}</span></td>
+   <td>${esc(x.lang)}</td><td class="mono">@${esc(x.username)}</td>
+   <td class="num">${N(x.followers)}</td><td class="num">${N(x.reach)}</td>
+   <td class="num"><b style="color:${x.outlier>50?'var(--acc)':'var(--dim)'}">${x.outlier}×</b></td>
+   <td>${esc(x.format||'—')}</td>
+   <td class="muted">${esc((x.caption||'').slice(0,90))}</td>
+   <td><a href="${x.url}" target="_blank">↗</a></td></tr>`).join('')+`</tbody></table>`;
+}
+function prompts(){
+  const p=(S.prompts||{}).prompts||[];
+  if(!p.length)return $('#s-prompts').innerHTML='<div class="empty">Run Prompts to generate the Veo prompt library.</div>';
+  $('#s-prompts').innerHTML=p.map(x=>`<div class="fmt">
+    <h4>${esc(x.id)} — ${esc(x.title)}
+      <span class="pill b">${esc(x.app)}</span><span class="pill">${esc(x.language)}</span>
+      <span class="pill ${x.origin==='trend'?'g':x.origin==='competitor'?'w':''}">${esc(x.origin)}</span></h4>
+    <p><b class="hk">Hook (0–2s):</b> ${esc(x.hook_line)}</p>
+    <p class="muted">${esc(x.rationale)}</p>
+    <details><summary>Veo prompt</summary><pre>${esc(x.veo_prompt)}</pre></details>
+    ${x.vo_script?`<details><summary>VO script</summary><pre>${esc(x.vo_script)}</pre></details>`:''}
+    </div>`).join('');
+}
+function comp(){
+  const c=S.competitors||{};
+  if(!c.advertisers)return $('#s-comp').innerHTML='<div class="empty">No competitor capture.</div>';
+  const f=c.category_findings||{};
+  $('#s-comp').innerHTML=`<div class="card" style="margin-bottom:14px">
+    <p><b style="color:var(--bad)">Saturated hook:</b> ${esc(f.saturated_hook)}</p>
+    <p><b style="color:var(--acc)">Structural gap:</b> ${esc(f.structural_gap)}</p>
+    <p class="muted">Winning rails: ${(f.winning_rails||[]).map(r=>`<span class="pill g">${esc(r)}</span>`).join('')}</p>
+    <p class="muted">${esc(f.length_sweet_spot)}</p>
+    <p class="muted">${esc(f.policy_note)}</p></div>`+
+  c.advertisers.map(a=>`<div class="fmt"><h4>${esc(a.brand)} <span class="pill">${esc(a.oldest_active||'—')}</span>
+    <span class="pill b">${esc(a.ads_seen)} ads</span></h4>
+    ${a.headline?`<p><b class="hk">Headline:</b> ${esc(a.headline)}</p>`:''}
+    ${a.primary_text?`<p class="muted">${esc(a.primary_text)}</p>`:''}
+    ${(a.hooks||[]).map(h=>`<p class="muted">• ${esc(h)}</p>`).join('')}
+    ${(a.claims||[]).map(h=>`<span class="pill w">${esc(h)}</span>`).join('')}
+    <p><b class="hk">Read:</b> ${esc(a.read)}</p></div>`).join('');
+}
+function renders(){
+  const r=S.renders||[];
+  if(!r.length)return $('#s-renders').innerHTML='<div class="empty">No renders yet. Upload an outro, then hit Render.</div>';
+  $('#s-renders').innerHTML='<div class="vid">'+r.map(v=>`<div><video src="/renders/${encodeURIComponent(v.file)}" controls preload="metadata"></video>
+   <div class="mono muted" style="margin-top:5px">${esc(v.file)}<br>${(v.bytes/1048576).toFixed(1)} MB</div></div>`).join('')+'</div>';
+}
+async function jobs(){
+  const js=S.jobs||[];
+  if(!js.length)return $('#s-jobs').innerHTML='<div class="empty">No jobs run yet.</div>';
+  const open=js.find(j=>j.status==='running')||js[0];
+  let log=[];
+  try{ log=(await (await fetch('/api/job?id='+open.id)).json()).log||[] }catch(e){}
+  $('#s-jobs').innerHTML=`<table><thead><tr><th>Job</th><th>Stage</th><th>Status</th><th>Started</th><th>Took</th></tr></thead><tbody>`+
+   js.map(j=>`<tr><td class="mono">${esc(j.id)}</td><td>${esc(j.stage)}</td>
+   <td><span class="pill ${j.status==='done'?'g':j.status==='running'?'w':'r'}">${esc(j.status)}</span></td>
+   <td class="mono muted">${new Date(j.started*1000).toLocaleTimeString()}</td>
+   <td class="num muted">${j.ended?Math.round(j.ended-j.started)+'s':'…'}</td></tr>`).join('')+
+   `</tbody></table><h4 style="margin:14px 0 6px;font-size:12px" class="muted">LOG — ${esc(open.id)}</h4>
+    <div class="log">${log.map(esc).join('<br>')||'(no output yet)'}</div>`;
+}
+function setWin(v){ WIN=+v; try{localStorage.setItem('win',v)}catch(e){} load(); }
+async function load(){
+  try{ S=await (await fetch('/api/state?days='+WIN)).json(); }catch(e){ return }
+  stats();timeline();byLang();byGenre();formats();reels();prompts();comp();renders();jobs();
+}
+try{ const w=localStorage.getItem('win'); if(w) document.getElementById('win').value=w; }catch(e){}
+load(); setInterval(load,4000);
+</script></body></html>

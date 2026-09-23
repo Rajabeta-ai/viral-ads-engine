@@ -1,0 +1,7 @@
+data/raw/.cache
+data/renders
+logs
+.env
+__pycache__
+*.pyc
+.git
