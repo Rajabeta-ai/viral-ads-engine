@@ -11,7 +11,12 @@ BANNED = [r"end ?card", r"logo reveal", r"logo animation", r"brand reveal",
           r"call to action", r"\bcta\b", r"final frame shows", r"closing card",
           r"title card at the end", r"app (?:ui|screen|interface)", r"sign ?up screen"]
 
-NEG = re.compile(r"\b(no|without|never|avoid|omit|exclude|free of|absent|don'?t (?:show|include))\b")
+NEG = re.compile(
+    r"\b(?:"
+    r"no|not|none|never|without|avoid|omit|exclude|excluding|free of|absent|"
+    r"do(?:es)?\s+not|did\s+not|must\s+not|should\s+not|shall\s+not|cannot|can'?t|"
+    r"don'?t|doesn'?t|won'?t|refrain\s+from|keep\s+out|leave\s+out|no\s+such"
+    r")\b")
 
 
 def violations(text):
