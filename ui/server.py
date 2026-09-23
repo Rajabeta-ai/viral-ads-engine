@@ -28,6 +28,7 @@ STAGES = {
     "trends":   [sys.executable, os.path.join(ROOT, "engine", "trends.py"), "240", "15"],
     "cluster":  [sys.executable, os.path.join(ROOT, "engine", "cluster.py"), "14"],
     "prompts":  [sys.executable, os.path.join(ROOT, "engine", "prompts.py"), "all", "2", "10"],
+    "archetypes": [sys.executable, os.path.join(ROOT, "engine", "archetypes.py"), "260"],
     "render":   [sys.executable, os.path.join(ROOT, "engine", "render.py")],
 }
 
@@ -131,6 +132,60 @@ def _rollup(rows, key, langmap):
     return out
 
 
+def _prabhuji(rows):
+    """Prabhuji-only view: archetype / angle / feature / emotion per reel, plus rollups."""
+    try:
+        tax = yaml.safe_load(open(os.path.join(ROOT, "config", "prabhuji.yaml")))
+    except Exception:
+        return {}
+    arch = {a["id"]: a for a in tax["archetypes"]}
+    angles = {g["id"]: dict(g, archetype=a["id"], archetype_label=a["label"])
+              for a in tax["archetypes"] for g in a["angles"]}
+
+    tagged = [r for r in rows if r.get("pj_archetype")]
+    tagged.sort(key=lambda r: -r.get("outlier", 0))
+
+    def cnt(key, src=None):
+        c = {}
+        for r in (src or tagged):
+            v = r.get(key)
+            if v:
+                c[v] = c.get(v, 0) + 1
+        return dict(sorted(c.items(), key=lambda kv: -kv[1]))
+
+    by_arch = []
+    for aid, a in arch.items():
+        rs = [r for r in tagged if r.get("pj_archetype") == aid]
+        by_arch.append({
+            "id": aid, "n_num": a["n"], "label": a["label"], "alias": a.get("alias"),
+            "psychology": a["psychology"], "who": a["who"], "buying": a["buying"],
+            "fit": a["fit"], "features": a["features"], "policy": a.get("policy"),
+            "n": len(rs),
+            "reach": sum(r["reach"] for r in rs),
+            "peak_outlier": round(max((r.get("outlier", 0) for r in rs), default=0), 1),
+            "triggers": cnt("pj_trigger", rs), "features_pull": cnt("pj_feature", rs),
+            "angles": [{"id": g["id"], "hook": g["hook"], "trigger": g["trigger"],
+                        "sells": g["sells"], "lines": g.get("lines", []),
+                        "n": sum(1 for r in rs if r.get("pj_angle") == g["id"])}
+                       for g in a["angles"]],
+        })
+    by_arch.sort(key=lambda x: -x["n"])
+
+    return {
+        "tagged": len(tagged), "total_bhakti": sum(1 for r in rows if r.get("genre") == "bhakti"),
+        "features": tax["features"], "triggers_vocab": tax["emotional_triggers"],
+        "by_archetype": by_arch,
+        "trigger_counts": cnt("pj_trigger"), "feature_counts": cnt("pj_feature"),
+        "angle_counts": cnt("pj_angle"),
+        "reels": [{**{k: r.get(k) for k in
+                      ("url", "date", "lang", "username", "followers", "reach", "outlier",
+                       "format", "caption", "pj_archetype", "pj_archetype_label", "pj_angle",
+                       "pj_feature", "pj_trigger", "pj_trigger2", "pj_confidence", "pj_why")},
+                   "angle_hook": (angles.get(r.get("pj_angle")) or {}).get("hook")}
+                  for r in tagged[:200]],
+    }
+
+
 def state(days=DEFAULT_DAYS):
     reels = _read("scored/reels.json", {}) or {}
     trends = _read("trends/trends.json", {}) or {}
@@ -191,6 +246,7 @@ def state(days=DEFAULT_DAYS):
         "prompts": prompts, "competitors": comp, "renders": renders,
         "outro": {"present": os.path.exists(outro),
                   "bytes": os.path.getsize(outro) if os.path.exists(outro) else 0},
+        "prabhuji": _prabhuji(rows),
         "jobs": jobs, "stages": list(STAGES), "schedule": sched,
     }
 

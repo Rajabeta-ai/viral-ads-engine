@@ -1,0 +1,173 @@
+# Prabhuji archetype taxonomy. Every harvested bhakti reel gets classified against this:
+# which archetype it would serve, which angle, which feature it sells, what emotion fires.
+features: [ringtone, wallpaper, mantra, status]
+
+# Controlled vocabulary. Keep this closed - an open list makes the UI columns useless.
+emotional_triggers:
+  - aggression              # Mahakal / Bajrang Bali roar energy, masculine intensity
+  - pride_identity          # "this is who we are" - sampradaya / regional / Sanatani pride
+  - religion                # plain devotional feeling, reverence for the deity itself
+  - routine_peace           # calm, anchoring, start-the-day steadiness
+  - discipline              # day-of-week observance, vrat, streak
+  - presence                # the deity is here, with me, on my screen
+  - social_currency         # being seen as pious, earning replies and blessings
+  - recognition             # my forward got noticed
+  - belonging               # everyone is doing this, I am part of it
+  - readiness               # the occasion is coming, be prepared
+  - hope_control            # exams, results, outcomes I cannot control
+  - aspiration              # marriage, prosperity, a wished-for life
+  - relief                  # the shield is up, the dread lifts
+  - auspicious_start        # new shop, new vehicle, new chapter
+  - comfort                 # company on a journey, not alone
+  - trend_participation     # the sound is trending, I am in it
+  - mood                    # lofi, aesthetic, vibe
+  - longing                 # the temple is far, home is far
+  - fomo_nostalgia          # it is happening there without me
+  - reconnection            # bridging the time zone, the distance
+  - responsibility          # my child must know this
+  - duty                    # doing right by parents, by tradition
+  - care                    # sending a blessing to someone who needs it
+
+archetypes:
+  - id: daily_devotee
+    n: 1
+    label: The Daily Devotee
+    psychology: "Ritual anchoring; wants a small sacred act to start the day and feel protected."
+    who: "30-60, tier-2/3, both genders, plus diaspora elders."
+    buying: "Routine, calm, a sense of divine presence at home."
+    features: [ringtone, wallpaper, mantra]
+    fit: both
+    angles:
+      - {id: 1A, hook: "6am, phone alarm rings: the first sound of the day should be sacred",
+         trigger: routine_peace, sells: [ringtone],
+         lines: ["Subah ki pehli aawaz — Hanuman Chalisa.", "Alarm nahi, aaj se aarti se uthiye."]}
+      - {id: 1B, hook: "Tuesday/Saturday, Hanuman day: day-of-week devotion",
+         trigger: discipline, sells: [ringtone, status],
+         lines: ["Aaj Mangalvar hai — Bajrang Bali ka din.", "Har din ka apna bhagwan — app khud badal deta hai."]}
+      - {id: 1C, hook: "Locked phone on the desk: every glance is darshan",
+         trigger: presence, sells: [wallpaper],
+         lines: ["Phone kholte hi Mahadev ke darshan."]}
+
+  - id: status_broadcaster
+    n: 2
+    label: The Status Broadcaster
+    psychology: "Devotional forwarding as identity performance, affection and social currency/punya."
+    who: "45-70 uncles/aunts + tier-2/3 adults active in family groups; diaspora parents."
+    buying: "Relevance, being seen as pious, getting replies and blessings."
+    features: [status]
+    fit: both
+    angles:
+      - {id: 2A, hook: "The family WhatsApp group at 6am: be the one who sends the best Good Morning",
+         trigger: social_currency, sells: [status],
+         lines: ["Family group mein sabse pehla aur sabse sundar status.", "Aaj ka Good Morning sabse alag hoga."]}
+      - {id: 2B, hook: "The uncle whose status nobody replies to: fresh HD content that earns reactions",
+         trigger: recognition, sells: [status],
+         lines: ["Roz naya status — purane forward chhodiye."]}
+      - {id: 2C, hook: "Festival morning: everyone posts the same greeting, stand out",
+         trigger: belonging, sells: [status],
+         lines: ["Is Janmashtami sabse pehle wish karein.", "HD full-screen status — seedha WhatsApp par."]}
+
+  - id: occasion_seeker
+    n: 3
+    label: The Occasion-Driven Seeker
+    alias: Muhurat Seeker
+    psychology: "Turns to bhakti at calendar peaks and life thresholds; wants to do the right thing at the right time."
+    who: "Broad, all tiers."
+    buying: "Timing, correctness, blessing at a pivotal moment."
+    features: [mantra, status, wallpaper]
+    fit: both
+    angles:
+      - {id: 3A, hook: "Day before Navratri", trigger: readiness, sells: [mantra, status],
+         lines: ["Navratri shuru — 9 devi, 9 din, ek app."]}
+      - {id: 3B, hook: "Exam season / results week: Saraswati and Ganesh blessings",
+         trigger: hope_control, sells: [mantra, wallpaper],
+         lines: ["Pariksha ke mausam mein — Saraswati vandana.", "Padhai se pehle, Ganesh vandana."]}
+      - {id: 3C, hook: "Marriage season / Somvar: vivah devotion framed by occasion, not accusation",
+         trigger: aspiration, sells: [mantra],
+         lines: ["Somvar ke liye — Devi Katyayani ke mantra."]}
+
+  - id: protection_minded
+    n: 4
+    label: The Protection-Minded
+    alias: Suraksha Bhakt
+    psychology: "Wants a shield - from bad luck, negativity, nazar, Shani."
+    who: "Tier-2/3 adults, small-business owners, mothers."
+    buying: "Safety, reassurance."
+    features: [ringtone, wallpaper, mantra]
+    fit: india_strong
+    policy: "Never claim it removes curses or guarantees protection. Frame as devotion for strength and courage."
+    angles:
+      - {id: 4A, hook: "Shanivar evening", trigger: relief, sells: [mantra, ringtone],
+         lines: ["Shanivar ki shaam — Hanuman ki sharan."]}
+      - {id: 4B, hook: "New shop / new vehicle", trigger: auspicious_start, sells: [wallpaper, status],
+         lines: ["Nayi shuruaat — pehle Ganesh vandana."]}
+      - {id: 4C, hook: "Travelling / commuting", trigger: comfort, sells: [ringtone],
+         lines: ["Safar mein saath — Bajrang Baan."]}
+
+  - id: youth_identity
+    n: 5
+    label: The Youth Identity Devotee
+    alias: Gen-Z Bhakt
+    psychology: "Faith as cool identity - the Khatu Shyam/Mahakal reels wave. Devotion that looks good on a phone."
+    who: "16-28, tier-1/2, active on Instagram and Moj."
+    buying: "Aesthetic self-expression, belonging to a movement."
+    features: [status, wallpaper, ringtone]
+    fit: india_strong
+    angles:
+      - {id: 5A, hook: "The reel with the trending bhajan", trigger: trend_participation, sells: [status],
+         lines: ["Khatu Shyam ka trending status — abhi download."]}
+      - {id: 5B, hook: "Mahakal aesthetic lock screen", trigger: aggression, sells: [wallpaper],
+         lines: ["Mahakal wallpaper — full HD, full attitude."]}
+      - {id: 5C, hook: "Lofi bhajan for study/chill", trigger: mood, sells: [ringtone],
+         lines: ["Lofi Hanuman Chalisa — naya vibe."]}
+
+  - id: diaspora_heart
+    n: 6
+    label: The Homesick Diaspora Heart
+    alias: Pardesi Bhakt
+    psychology: "Abroad, faith becomes effortful and precious; wants to feel connected to home."
+    who: "25-55 NRIs in US/UK/GCC/Canada/Australia."
+    buying: "Belonging, continuity, a piece of home."
+    features: [ringtone, wallpaper, mantra, status]
+    fit: diaspora_only
+    angles:
+      - {id: 6A, hook: "No temple within 100 miles", trigger: longing, sells: [wallpaper, mantra],
+         lines: ["Mandir door hai? Ghar hi mandir ban jaaye."]}
+      - {id: 6B, hook: "Festival happening in India while you are at work abroad",
+         trigger: fomo_nostalgia, sells: [status, mantra],
+         lines: ["Wahan Diwali hai — yahin se jude rahiye."]}
+      - {id: 6C, hook: "Aarti time-zone mismatch", trigger: reconnection, sells: [ringtone, mantra],
+         lines: ["Aarti ka time miss? Jab chahein, tab darshan."]}
+
+  - id: sanskaar_setu
+    n: 7
+    label: The Culture-Transmitting Parent
+    alias: Sanskaar Setu
+    psychology: "Anxious that kids born abroad will not know the gods, mantras, festivals."
+    who: "NRI parents 30-50; also urban India parents."
+    buying: "Cultural continuity, doing their duty."
+    features: [mantra, status, wallpaper]
+    fit: diaspora_strong
+    angles:
+      - {id: 7A, hook: "Child asks 'who is this god?'", trigger: responsibility, sells: [mantra, wallpaper],
+         lines: ["Bachchon ko bhagwan se milwaiye — Hindi mein."]}
+      - {id: 7B, hook: "Teaching a first mantra", trigger: pride_identity, sells: [mantra],
+         lines: ["Pehla mantra, saath mein seekhein."]}
+      - {id: 7C, hook: "Pooja for parents back home", trigger: duty, sells: [status, mantra],
+         lines: ["Maa-baap ke liye, yahin se pooja."]}
+
+  - id: aashirwad_sender
+    n: 8
+    label: The Gifting Well-Wisher
+    alias: Aashirwad Sender
+    psychology: "Expresses care by sending blessings; devotional content as relationship maintenance."
+    who: "35-65, all tiers plus diaspora."
+    buying: "Connection, being a good family member."
+    features: [status]
+    fit: both
+    angles:
+      - {id: 8A, hook: "A relative is unwell / has an exam / new job: send a blessing",
+         trigger: care, sells: [status],
+         lines: ["Apno ko aashirwad bhejiye — ek tap mein."]}
+      - {id: 8B, hook: "Birthday/anniversary in the family", trigger: care, sells: [status],
+         lines: ["Is baar wish ke saath ek aashirwad bhi."]}

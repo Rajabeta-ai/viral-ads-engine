@@ -3,8 +3,8 @@
 import os, sys, subprocess, argparse, time
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
-ORDER = ["harvest", "enrich", "trends", "cluster", "prompts", "render"]
-ARGS = {"harvest": ["45"], "enrich": ["600", "40"], "trends": ["240", "15"], "cluster": ["14"],
+ORDER = ["harvest", "enrich", "trends", "cluster", "archetypes", "prompts", "render"]
+ARGS = {"harvest": ["45"], "enrich": ["600", "40"], "trends": ["240", "15"], "cluster": ["14"], "archetypes": ["260"],
         "prompts": ["all", "2", "10"], "render": ["--limit", "3"]}
 
 

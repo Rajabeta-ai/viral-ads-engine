@@ -71,7 +71,7 @@ details summary{cursor:pointer;color:var(--acc2);font-size:12px;padding:3px 0}
   <button onclick="run('enrich')">Enrich</button>
   <button onclick="run('trends')">Classify</button>
   <button onclick="run('cluster')">Cluster</button>
-  <button onclick="run('prompts')">Prompts</button>
+  <button onclick="run('archetypes')">Archetypes</button><button onclick="run('prompts')">Prompts</button>
   <button class="go" onclick="run('render')">Render</button>
   <button onclick="document.getElementById('up').click()">Upload outro</button>
   <input id="up" type="file" accept="video/*" style="display:none" onchange="upOutro(this)">
@@ -80,13 +80,14 @@ details summary{cursor:pointer;color:var(--acc2);font-size:12px;padding:3px 0}
   <div class="grid stats" id="stats"></div>
   <nav>
     <b class="on" data-t="timeline">Trend timeline</b><b data-t="lang">By language</b>
-    <b data-t="genre">By genre</b><b data-t="formats">Canonical formats</b>
+    <b data-t="genre">By genre</b><b data-t="prabhuji">Prabhuji</b><b data-t="formats">Canonical formats</b>
     <b data-t="reels">Top reels</b><b data-t="prompts">Prompts</b>
     <b data-t="comp">Competitors</b><b data-t="renders">Renders</b><b data-t="jobs">Jobs</b>
   </nav>
   <section class="on" id="s-timeline"></section>
   <section id="s-lang"></section>
   <section id="s-genre"></section>
+  <section id="s-prabhuji"></section>
   <section id="s-formats"></section>
   <section id="s-reels"></section>
   <section id="s-prompts"></section>
@@ -192,6 +193,50 @@ function byGenre(){
   if(!g.length)return $('#s-genre').innerHTML='<div class="empty">Nothing in this window.</div>';
   $('#s-genre').innerHTML=g.map(x=>groupCard(x,false)).join('');
 }
+const TRIG_COLOR={aggression:'r',pride_identity:'w',religion:'b'};
+function prabhuji(){
+  const P=S.prabhuji||{};
+  const rs=P.reels||[];
+  if(!rs.length)return $('#s-prabhuji').innerHTML=
+    '<div class="empty">No Prabhuji-tagged reels in this window. Run <b>Archetypes</b> (needs Classify first).</div>';
+  const pill=t=>`<span class="pill ${TRIG_COLOR[t]||''}">${esc(t)}</span>`;
+  const summary=`<div class="card" style="margin-bottom:14px">
+    <p><b>${N(P.tagged)}</b> of ${N(P.total_bhakti)} bhakti reels tagged to an archetype</p>
+    <p class="muted" style="margin-top:6px">FEATURE PULL — what these reels would actually sell</p>
+    <p>${Object.entries(P.feature_counts||{}).map(([k,v])=>`<span class="pill g">${esc(k)} ${v}</span>`).join('')||'<span class="muted">—</span>'}</p>
+    <p class="muted" style="margin-top:6px">EMOTIONAL TRIGGERS</p>
+    <p>${Object.entries(P.trigger_counts||{}).map(([k,v])=>`<span class="pill ${TRIG_COLOR[k]||''}">${esc(k)} ${v}</span>`).join('')||'<span class="muted">—</span>'}</p></div>`;
+
+  const arch=(P.by_archetype||[]).filter(a=>a.n>0).map(a=>`<div class="fmt">
+    <h4>${a.n_num}. ${esc(a.label)}${a.alias?` <span class="muted">(${esc(a.alias)})</span>`:''}
+      <span class="pill b">${N(a.n)} reels</span>
+      <span class="pill">${esc(a.fit)}</span>
+      <span class="pill g">peak ${N(Math.round(a.peak_outlier))}×</span></h4>
+    <p class="muted">${esc(a.psychology)}</p>
+    <p class="muted"><b class="hk">Who:</b> ${esc(a.who)} · <b class="hk">Buys:</b> ${esc(a.buying)}</p>
+    <p>${(a.features||[]).map(f=>`<span class="pill g">${esc(f)}</span>`).join('')}
+       ${Object.entries(a.triggers||{}).map(([k,v])=>pill(k)+'').join('')}</p>
+    ${a.policy?`<p class="pill r" style="display:inline-block">${esc(a.policy)}</p>`:''}
+    <table style="margin-top:8px"><thead><tr><th>Angle</th><th>Hook</th><th>Trigger</th><th>Sells</th><th class="num">Reels</th></tr></thead><tbody>
+    ${a.angles.map(g=>`<tr><td class="mono"><b>${esc(g.id)}</b></td><td>${esc(g.hook)}</td>
+      <td>${pill(g.trigger)}</td><td>${(g.sells||[]).map(x=>`<span class="pill g">${esc(x)}</span>`).join('')}</td>
+      <td class="num">${g.n||'—'}</td></tr>`).join('')}</tbody></table></div>`).join('');
+
+  const table=`<h4 style="margin:16px 0 6px;font-size:12px" class="muted">TAGGED REELS</h4>
+  <table><thead><tr><th>Date</th><th>Lang</th><th>Creator</th><th class="num">Reach</th><th class="num">Outlier</th>
+   <th>Archetype</th><th>Angle</th><th>Feature</th><th>Emotional trigger</th><th>Conf</th><th>Why</th><th></th></tr></thead><tbody>`+
+   rs.map(r=>`<tr><td class="mono">${esc(r.date)}</td><td>${esc(r.lang)}</td>
+     <td class="mono">@${esc(r.username)}</td><td class="num">${N(r.reach)}</td>
+     <td class="num"><b style="color:${r.outlier>50?'var(--acc)':'var(--dim)'}">${N(Math.round(r.outlier||0))}×</b></td>
+     <td>${esc(r.pj_archetype_label||'—')}</td>
+     <td class="mono"><b>${esc(r.pj_angle||'—')}</b><br><span class="muted" style="font-size:10.5px">${esc((r.angle_hook||'').slice(0,46))}</span></td>
+     <td>${r.pj_feature?`<span class="pill g">${esc(r.pj_feature)}</span>`:'—'}</td>
+     <td>${r.pj_trigger?pill(r.pj_trigger):'—'}${r.pj_trigger2?' '+pill(r.pj_trigger2):''}</td>
+     <td><span class="pill ${r.pj_confidence==='high'?'g':r.pj_confidence==='low'?'r':'w'}">${esc(r.pj_confidence||'?')}</span></td>
+     <td class="muted" style="max-width:260px">${esc((r.pj_why||'').slice(0,120))}</td>
+     <td><a href="${r.url}" target="_blank">↗</a></td></tr>`).join('')+`</tbody></table>`;
+  $('#s-prabhuji').innerHTML=summary+arch+table;
+}
 function reels(){
   const r=S.top_reels||[];
   if(!r.length)return $('#s-reels').innerHTML='<div class="empty">No reels yet.</div>';
@@ -260,7 +305,7 @@ async function jobs(){
 function setWin(v){ WIN=+v; try{localStorage.setItem('win',v)}catch(e){} load(); }
 async function load(){
   try{ S=await (await fetch('/api/state?days='+WIN)).json(); }catch(e){ return }
-  stats();timeline();byLang();byGenre();formats();reels();prompts();comp();renders();jobs();
+  stats();timeline();byLang();byGenre();prabhuji();formats();reels();prompts();comp();renders();jobs();
 }
 try{ const w=localStorage.getItem('win'); if(w) document.getElementById('win').value=w; }catch(e){}
 load(); setInterval(load,4000);
