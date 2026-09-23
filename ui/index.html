@@ -104,7 +104,12 @@ document.querySelectorAll('nav b').forEach(b=>b.onclick=()=>{
   document.querySelectorAll('section').forEach(x=>x.classList.remove('on'));
   $('#s-'+b.dataset.t).classList.add('on');});
 
-async function run(stage){ await fetch('/api/run/'+stage,{method:'POST'}); setTimeout(load,400);
+async function run(stage){
+  const r=await fetch('/api/run/'+stage,{method:'POST'});
+  if(r.status===409){ const e=await r.json();
+    alert('Cannot start '+stage+': '+e.error+'\n\nStages share one data file, so only one runs at a time.');
+    return; }
+  setTimeout(load,400);
   document.querySelectorAll('nav b').forEach(x=>x.classList.remove('on'));
   document.querySelector('nav b[data-t=jobs]').classList.add('on');
   document.querySelectorAll('section').forEach(x=>x.classList.remove('on'));$('#s-jobs').classList.add('on');}

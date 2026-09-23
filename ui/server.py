@@ -45,9 +45,28 @@ def _env():
     return e
 
 
+class StageBusy(Exception):
+    """Raised when a pipeline stage is asked to start while another one is running."""
+
+
+def _running_stage():
+    with JOBS_LOCK:
+        for j in JOBS.values():
+            if j["status"] == "running":
+                return j
+    return None
+
+
 def start_job(stage, extra=None):
     if stage not in STAGES:
         raise KeyError(stage)
+    # Every stage read-modify-writes data/scored/reels.json. The scheduler runs them in
+    # sequence, but a manual trigger from the UI can land mid-cycle - and then whichever
+    # process writes last silently discards the other's work (e.g. a fresh harvest wiping
+    # the archetype tags). So only one stage runs at a time, process-wide.
+    busy = _running_stage()
+    if busy:
+        raise StageBusy(f"{busy['stage']} ({busy['id']}) is already running")
     jid = f"{stage}-{uuid.uuid4().hex[:8]}"
     cmd = list(STAGES[stage]) + (extra or [])
     job = {"id": jid, "stage": stage, "cmd": " ".join(cmd[1:]), "status": "running",
@@ -320,6 +339,8 @@ class H(BaseHTTPRequestHandler):
                 return self._send(200, start_job(stage, [str(x) for x in extra]))
             except KeyError:
                 return self._send(400, {"error": f"unknown stage {stage}"})
+            except StageBusy as e:
+                return self._send(409, {"error": str(e), "code": "stage_busy"})
         if p == "/api/outro":
             ctype = self.headers.get("Content-Type", "")
             n = int(self.headers.get("Content-Length") or 0)
@@ -360,7 +381,12 @@ def _scheduler():
                 stages.append("prompts")
             SCHED["running"] = True
             for st in stages:
-                j = start_job(st)
+                while _running_stage():          # let a manual trigger finish first
+                    time.sleep(10)
+                try:
+                    j = start_job(st)
+                except StageBusy:
+                    continue
                 while True:
                     with JOBS_LOCK:
                         done = j["status"] != "running"
